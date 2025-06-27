@@ -2,8 +2,10 @@
 #  Import LIBRARIES
 from fastapi import FastAPI
 
+from data.app_data import valedictorian_list
+
 #  Import FILES
-from models.models import Product, Student, User
+from models.models import Order, Product, Student, User, Valedictorian
 
 #  _______________
 
@@ -49,16 +51,22 @@ def get_id(id: int) -> dict[str, str]:
     return {"message": f"Student's id is: {id}"}
 
 
-#  Works with {"name": "elle","roll_no": 20,"email": "elle@elle.com","class_name": "6th Grade"}
-@app.post(path="/register/")
-def register_student(student: Student) -> dict[str, str | int | None]:
-    return {
-        "message": "Student registered successfully",
-        "name": student.name,
-        "roll_no": student.roll_no,
-        "email": student.email,
-        "class_name": student.class_name,
-    }
+#  Works with: {"name": "erre", "age": 20, "address": {"city": "London", "zipcode": "12345678" }}
+@app.post(path="/student")
+def add_student(student: Student) -> dict[str, str | Student]:
+    return {"message": "Student added", "data": student}
+
+
+# #  Works with {"name": "elle","roll_no": 20,"email": "elle@elle.com","class_name": "6th Grade"}
+# @app.post(path="/register/")
+# def register_student(student: Student) -> dict[str, str | int | None]:
+#     return {
+#         "message": "Student registered successfully",
+#         "name": student.name,
+#         "roll_no": student.roll_no,
+#         "email": student.email,
+#         "class_name": student.class_name,
+#     }
 
 
 # @app.post(path="/create-student/")
@@ -83,6 +91,25 @@ def add_product(product: Product) -> dict[str, str | float | bool | None]:
     }
 
 
+print(Valedictorian)
+print(valedictorian_list)
+
+
+# valedictorian works with: [{"name": "Erre", "age": 20}, {"name": "sassa", "age": 30}, {"name": "umma", "age": 90}]
+@app.post(path="/valedictorian/")
+# def add_valedictorian(valedictorians: valedictorian_list,):  # -> dict[str, str | int | Any]:# -> dict[str, str | int | Any]:# -> dict[str, str | int | Any]:
+def add_valedictorian(
+    valedictorians: list[Valedictorian],
+) -> dict[
+    str, str | int | list[Valedictorian]
+]:  # -> dict[str, str | int | Any]:# -> dict[str, str | int | Any]:# -> dict[str, str | int | Any]:
+    return {
+        "message": "valedictorian added",
+        "count": len(valedictorians),
+        "data": valedictorians,
+    }
+
+
 # #  Works with: /create-student/?id=1000&name=erre&age=21&email=erre@erre.com
 # @app.get(path="/student-details")
 # # @app.get(path="/student-details/")
@@ -92,6 +119,17 @@ def add_product(product: Product) -> dict[str, str | float | bool | None]:
 #         "name": student.name,
 #         "age": student.age,
 #     }  # return (f"The student details are: id: {student.id}, name {student.name}, age: {student.age}",)
+
+
+@app.post(path="/create-order")
+def create_order(order: Order) -> dict[str, str | int | float]:
+    total: float = sum([item.price for item in order.items])
+    return {
+        "message": "Order received",
+        "customer": order.customer_name,
+        "total_items": len(order.items),
+        "total_amount": total,
+    }
 
 
 # def main():
