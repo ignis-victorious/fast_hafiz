@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 
 #  Import FILES
-from models.models import Student, User
+from models.models import Product, Student, User
 
 #  _______________
 
@@ -49,25 +49,49 @@ def get_id(id: int) -> dict[str, str]:
     return {"message": f"Student's id is: {id}"}
 
 
-@app.post(path="/create-student/")
-def create_student(student: Student) -> dict[str, str | int]:
+#  Works with {"name": "elle","roll_no": 20,"email": "elle@elle.com","class_name": "6th Grade"}
+@app.post(path="/register/")
+def register_student(student: Student) -> dict[str, str | int | None]:
     return {
-        "message": "User created successfully",
+        "message": "Student registered successfully",
         "name": student.name,
-        "age": student.age,
+        "roll_no": student.roll_no,
         "email": student.email,
+        "class_name": student.class_name,
     }
 
 
-#  Works with: /create-student/?id=1000&name=erre&age=21&email=erre@erre.com
-@app.get(path="/student-details")
-# @app.get(path="/student-details/")
-def student_details(student: Student) -> dict[str, int | str]:
+# @app.post(path="/create-student/")
+# def create_student(student: Student) -> dict[str, str | int]:
+#     return {
+#         "message": "User created successfully",
+#         "name": student.name,
+#         "age": student.age,
+#         "email": student.email,
+#     }
+
+
+#  Works with: {"product_name": "notebook", "price": 299.99, "description": "", "in_stock": true}
+@app.post(path="/add-product")
+def add_product(product: Product) -> dict[str, str | float | bool | None]:
     return {
-        "id": student.id,
-        "name": student.name,
-        "age": student.age,
-    }  # return (f"The student details are: id: {student.id}, name {student.name}, age: {student.age}",)
+        "message": "Product added",
+        "product_name": product.product_name,
+        "price": product.price,
+        "description": product.description,
+        "in_stock": product.in_stock,
+    }
+
+
+# #  Works with: /create-student/?id=1000&name=erre&age=21&email=erre@erre.com
+# @app.get(path="/student-details")
+# # @app.get(path="/student-details/")
+# def student_details(student: Student) -> dict[str, int | str]:
+#     return {
+#         "id": student.id,
+#         "name": student.name,
+#         "age": student.age,
+#     }  # return (f"The student details are: id: {student.id}, name {student.name}, age: {student.age}",)
 
 
 # def main():

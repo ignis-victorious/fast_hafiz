@@ -13,7 +13,21 @@ class User(BaseModel):
 
 
 class Student(BaseModel):
-    id: int
     name: str
-    age: int
-    email: str
+    roll_no: int
+    email: str | None = None
+    class_name: str = "10th Grade"
+
+
+# class Student(BaseModel):
+#     id: int
+#     name: str
+#     age: int
+#     email: str
+
+
+class Product(BaseModel):
+    product_name: str
+    price: float
+    description: str | None
+    in_stock: bool = True
