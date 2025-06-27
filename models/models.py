@@ -10,3 +10,10 @@ class User(BaseModel):
     name: str
     surnamename: str
     age: int
+
+
+class Student(BaseModel):
+    id: int
+    name: str
+    age: int
+    email: str
