@@ -1,13 +1,23 @@
 #  _______________
 #  Import LIBRARIES
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 
 from data.app_data import valedictorian_list
 
 #  Import FILES
-from models.models import Order, Product, Student, User, Valedictorian
+from models.models import Order, Product, Student, User, UserResponse, Valedictorian
 
 #  _______________
+## Response Model
+#  When we send data back to the user, FastAPI allows us to filter or control the format of that
+#  response using a model. It hides unwanted fields and only shows what we want.
+## Status Codes
+# A status code tells whether the request was successful or failed.
+# 200 - OK (Success)
+# 201 - Created (New data added)
+# 400 - Bad Request (Missing data)
+# 404 - Not Found
+# 500 - Server Error
 
 app: FastAPI = FastAPI()
 
@@ -27,9 +37,9 @@ def say_hello(name: str) -> dict[str, str]:
     return {"message": f"Hello {name}, welcome on FastApi example"}
 
 
-@app.post(path="/create-user")
-def create_user(user: User) -> dict[str, str | int]:
-    return {"message": f"User {user.name} added successfully", "age": user.age}
+# @app.post(path="/create-user")
+# def create_user(user: User) -> dict[str, str | int]:
+#     return {"message": f"User {user.name} added successfully", "age": user.age}
 
 
 #  Works with: {"Name": "elle", "price": 11.99} or /search/?name=elle&price=11.99
@@ -79,16 +89,16 @@ def add_student(student: Student) -> dict[str, str | Student]:
 #     }
 
 
-#  Works with: {"product_name": "notebook", "price": 299.99, "description": "", "in_stock": true}
-@app.post(path="/add-product")
-def add_product(product: Product) -> dict[str, str | float | bool | None]:
-    return {
-        "message": "Product added",
-        "product_name": product.product_name,
-        "price": product.price,
-        "description": product.description,
-        "in_stock": product.in_stock,
-    }
+# #  Works with: {"product_name": "notebook", "price": 299.99, "description": "", "in_stock": true}
+# @app.post(path="/add-product")
+# def add_product(product: Product) -> dict[str, str | float | bool | None]:
+#     return {
+#         "message": "Product added",
+#         "product_name": product.product_name,
+#         "price": product.price,
+#         "description": product.description,
+#         "in_stock": product.in_stock,
+#     }
 
 
 print(Valedictorian)
@@ -121,6 +131,7 @@ def add_valedictorian(
 #     }  # return (f"The student details are: id: {student.id}, name {student.name}, age: {student.age}",)
 
 
+# Works with: {"customer_name": "Erre", "items": [{"product_name": "Nutella", "price": 9.90, "description": "Chocolate spread", "in_stock": true,}],}
 @app.post(path="/create-order")
 def create_order(order: Order) -> dict[str, str | int | float]:
     total: float = sum([item.price for item in order.items])
@@ -130,6 +141,18 @@ def create_order(order: Order) -> dict[str, str | int | float]:
         "total_items": len(order.items),
         "total_amount": total,
     }
+
+
+#  Example 8
+@app.post(path="/register", response_model=UserResponse)
+def register(user: User) -> User:
+    # here we save data to db
+    return user
+
+
+@app.post(path="/add_product", status_code=status.HTTP_201_CREATED)
+def add_product(product: Product) -> dict[str, str | Product]:
+    return {"message": "Product added", "data": product}
 
 
 # def main():

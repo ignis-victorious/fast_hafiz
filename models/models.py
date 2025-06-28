@@ -6,13 +6,25 @@ from pydantic import BaseModel
 #  _______________
 
 
-class User(BaseModel):
-    name: str
-    surnamename: str
-    age: int
+# class User(BaseModel):
+#     name: str
+#     surnamename: str
+#     age: int
 
 
 # {"name": "Erre", "age": 18, "address":{ "city:": "London" "zipcode": "54000"}}
+
+
+#  Example 8
+class User(BaseModel):
+    name: str
+    email: str
+    password: str
+
+
+class UserResponse(BaseModel):
+    name: str
+    email: str
 
 
 class Address(BaseModel):
